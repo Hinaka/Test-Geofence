@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -107,6 +108,11 @@ class MainActivity : ComponentActivity() {
                 val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
                 mapIntent.setPackage("com.google.android.apps.maps")
                 startActivity(mapIntent)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    startForegroundService(Intent(this@MainActivity, LocationService::class.java))
+                } else {
+                    startService(Intent(this@MainActivity, LocationService::class.java))
+                }
             }
             addOnFailureListener {
                 Log.d("Hinaka", "geofences failure $it")

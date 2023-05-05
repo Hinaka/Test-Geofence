@@ -32,8 +32,9 @@ class AudioService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnCo
                         .build()
                 )
                 setDataSource(url)
-                prepare() // might take long! (for buffering, etc)
-                start()
+                setOnPreparedListener(this@AudioService)
+                prepareAsync() // might take long! (for buffering, etc)
+                Log.d("Hinaka", "prepareAsync $url")
             }
         }
         return START_NOT_STICKY
@@ -46,7 +47,8 @@ class AudioService : Service(), MediaPlayer.OnPreparedListener, MediaPlayer.OnCo
     }
 
     override fun onPrepared(mediaPlayer: MediaPlayer?) {
-        // Do something when the audio is prepared
+        Log.d("Hinaka", "mediaplayer onPrepared")
+        mediaPlayer?.start()
     }
 
     override fun onCompletion(mediaPlayer: MediaPlayer?) {
