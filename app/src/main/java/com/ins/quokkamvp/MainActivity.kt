@@ -9,27 +9,19 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.lifecycleScope
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.rememberMultiplePermissionsState
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
 import com.ins.quokkamvp.logger.LogDao
 import com.ins.quokkamvp.logger.LogEntity
-import com.ins.quokkamvp.logger.LogScreen
+import com.ins.quokkamvp.ui.theme.MainScreen
 import com.ins.quokkamvp.ui.theme.QuokkaMVPTheme
 import kotlinx.coroutines.launch
 
@@ -49,52 +41,47 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    var showLogs by remember { mutableStateOf(false) }
 
-                    if (!showLogs) {
-                        Column(modifier = Modifier.fillMaxSize()) {
-                            val permissions = rememberMultiplePermissionsState(
-                                listOf(
-                                    android.Manifest.permission.ACCESS_BACKGROUND_LOCATION,
-                                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
-                                    android.Manifest.permission.ACCESS_FINE_LOCATION,
-                                    android.Manifest.permission.POST_NOTIFICATIONS,
-                                )
-                            )
+                    MainScreen()
 
-                            if (permissions.allPermissionsGranted) {
-                                Button(onClick = { startNavigating() }) {
-                                    Text(text = "Start")
-                                }
-                            } else {
-                                Button(onClick = { permissions.launchMultiplePermissionRequest() }) {
-                                    Text(text = "Grant permissions")
-                                }
-                            }
-
-                            Button(onClick = { addLog() }) {
-
-                            }
-
-                            Button(onClick = { showLogs = true }) {
-                                Text("Show Logs")
-                            }
-                        }
-                    } else {
-                        LogScreen(
-                            onBack = { showLogs = false }
-                        )
-                    }
+//                    var showLogs by remember { mutableStateOf(false) }
+//
+//                    if (!showLogs) {
+//                        Column(modifier = Modifier.fillMaxSize()) {
+//                            val permissions = rememberMultiplePermissionsState(
+//                                listOf(
+//                                    android.Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+//                                    android.Manifest.permission.ACCESS_COARSE_LOCATION,
+//                                    android.Manifest.permission.ACCESS_FINE_LOCATION,
+//                                    android.Manifest.permission.POST_NOTIFICATIONS,
+//                                )
+//                            )
+//
+//                            if (permissions.allPermissionsGranted) {
+//                                Button(onClick = { startNavigating() }) {
+//                                    Text(text = "Start")
+//                                }
+//                            } else {
+//                                Button(onClick = { permissions.launchMultiplePermissionRequest() }) {
+//                                    Text(text = "Grant permissions")
+//                                }
+//                            }
+//
+//                            Button(onClick = { addLog() }) {
+//
+//                            }
+//
+//                            Button(onClick = { showLogs = true }) {
+//                                Text("Show Logs")
+//                            }
+//                        }
+//                    } else {
+//                        LogScreen(
+//                            onBack = { showLogs = false }
+//                        )
+//                    }
                 }
             }
-        }
-    }
-
-    private fun addLog() {
-        lifecycleScope.launch {
-            LogDao.getInstance(this@MainActivity).insertAll(
-                LogEntity(message = "fake message")
-            )
         }
     }
 
