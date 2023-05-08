@@ -12,6 +12,10 @@ import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofenceStatusCodes
 import com.google.android.gms.location.GeofencingEvent
+import com.ins.quokkamvp.logger.LogDao
+import com.ins.quokkamvp.logger.LogEntity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 private const val TAG = "Hinaka"
@@ -52,6 +56,11 @@ class GeofenceBroadcastReceiver : BroadcastReceiver() {
             context?.startService(serviceIntent)
 
             // Send notification and log the transition details.
+            GlobalScope.launch {
+                LogDao.getInstance(context!!).insertAll(
+                    LogEntity(message = geofenceTransitionDetails!!)
+                )
+            }
             sendNotification(context!!, geofenceTransitionDetails!!)
         } else {
             // Log the error.
